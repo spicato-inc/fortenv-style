@@ -1,69 +1,68 @@
-@use '../modules' as *;
+@use "../module" as *;
 
 // リキッドデザインの場合
 html {
-	font-size: calc(var(--vw) / var(--base-vw));
+  font-size: calc(var(--vw) / var(--base-vw));
 }
 
 body {
-	font-family:
-		'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
-		Meiryo, sans-serif;
-	font-size: 16rem;
-	color: #000;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-size-adjust: none;
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans", Meiryo, sans-serif;
+  font-size: 16rem;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: none;
 
-	// スクロールバーの有無
-	// &::-webkit-scrollbar {
-	// 	display: none;
-	// }
+  // スクロールバーの有無
+  // &::-webkit-scrollbar {
+  // 	display: none;
+  // }
 }
 
 a {
-	display: block;
-	color: currentcolor;
-	cursor: pointer;
+  display: block;
+  color: currentcolor;
+  cursor: pointer;
 }
 
 button {
-	color: currentcolor;
-	cursor: pointer;
+  color: currentcolor;
+  cursor: pointer;
 }
 
 details {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 video,
 img {
-	display: block;
-	width: 100%;
-	height: auto;
-	object-fit: cover;
-	object-position: center;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
 }
 
 svg {
-	display: block;
-	width: 100%;
-	height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .preload * {
-	transition: none !important;
+  transition: none !important;
 }
 
 .lContainer {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .lMain {
-	flex: 1;
-	// Safariでスクロール不可になる？
-	// overflow-x: hidden;
-	overflow: hidden;
+  flex: 1;
+  // Safariでスクロール不可になる？
+  // overflow-x: hidden;
+  overflow: hidden;
 }

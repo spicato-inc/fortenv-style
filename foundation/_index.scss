@@ -1,11 +1,11 @@
 // リセットCSS（不変）
-@forward 'reset';
+@forward "reset";
 
 // CSS変数
-@forward 'variable';
+@forward "variable";
 
 // ベース
-@forward 'base';
+@forward "base";
 
 // ユーティリティクラスを設定する
-@forward 'utility';
+@forward "utility";
