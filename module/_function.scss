@@ -1,0 +1,160 @@
+@use 'sass:math';
+@use 'sass:string';
+@use 'sass:meta';
+@use './config' as *;
+
+// pxをvwに変換
+@function px-vw($size, $viewport: $sp-vw) {
+	$rate: math.div(100, $viewport);
+
+	@return math.div((math.round(($rate * $size * 1vw) * 100)), 100);
+}
+
+// pxをvhに変換
+@function px-vh($size, $viewport: $sp-vh) {
+	$rate: math.div(100, $viewport);
+
+	@return math.div((math.round(($rate * $size * 1vh) * 100)), 100);
+}
+
+// pxをvminに変換
+@function px-vmin($size, $viewport: $sp-vw) {
+	$rate: math.div(100, $viewport);
+
+	@return math.div((math.round(($rate * $size * 1vmin) * 100)), 100);
+}
+
+// pxをvmaxに変換
+@function px-vmax($size, $viewport: $sp-vw) {
+	$rate: math.div(100, $viewport);
+
+	@return math.div((math.round(($rate * $size * 1vmax) * 100)), 100);
+}
+
+// minを関数対応化
+@function func-min($numbers...) {
+	@return min($numbers...);
+}
+
+@function min($values...) {
+	@return string.unquote('min(#{$values})');
+}
+
+// maxを関数対応化
+@function func-max($numbers...) {
+	@return max($numbers...);
+}
+
+@function max($values...) {
+	@return string.unquote('max(#{$values})');
+}
+
+// pxをremに変換
+@function rem($size) {
+	$result: math.div($size, 16);
+
+	@return #{$result}rem;
+}
+
+// CSS変数の値を使用できる px-vw
+@function var-vw($var, $viewport: $sp-vw) {
+	$rate: math.div(math.round(math.div(100, $viewport) * 10000), 10000);
+
+	@return calc($rate * var(#{$var}) * 1vw);
+}
+
+// rem と vw を組み合わせる
+@function remvw($size, $viewport: $sp-vw) {
+	$rate: math.div(100, $viewport);
+	$vw: math.div((math.round(($rate * $size * 1vw) * 100)), 100);
+	$rem: math.div($size, 16);
+
+	@return calc(#{$vw} + (#{$rem}rem - #{$size}px));
+}
+
+// clamp生成
+@function clampvw($min, $size, $max, $vp: $sp-vw) {
+	$min: math.div($min, 16) * 1rem;
+	$max: math.div($max, 16) * 1rem;
+	$rate: math.div(100, $vp);
+	$vw: math.div((math.round(($rate * $size * 1vw) * 100)), 100);
+
+	@return clamp($min, $vw, $max);
+}
+
+// 単位付き数値から単位を除去する関数
+// ・数値に単位がある場合、1を掛けることで単位部分を打ち消し、数値のみ返す
+// ・単位が無い場合はそのまま返す
+@function strip-unit($number) {
+	@if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+		@return math.div($number, $number * 0 + 1);
+	}
+
+	@return $number;
+}
+
+// レスポンシブなサイズを生成する関数
+// $minBreakpointValue: ブレークポイント小の時のサイズ（小画面時の下限）
+// $maxBreakpointValue: ブレークポイント大の時のサイズ（大画面時の上限）
+// $minBreakpoint: ブレークポイント小（レスポンシブ変化の開始位置）
+// $maxBreakpoint: ブレークポイント大（レスポンシブ変化の終了位置）
+@function fluid(
+	$minBreakpointValue,
+	$maxBreakpointValue,
+	$minBreakpoint: 768,
+	$maxBreakpoint: 1512
+) {
+	// スロープ（vw単位）を計算
+	// (サイズ差) / (ブレークポイント差) に100を掛けて計算
+	// prettier-ignore
+	$slope: math.div(math.round(100 * math.div(($maxBreakpointValue - $minBreakpointValue), ($maxBreakpoint - $minBreakpoint)) * 10000), 10000);
+
+	// オフセット（切片）を計算
+	// 小さいブレークポイントでの値からスロープ分を引いて調整
+	// prettier-ignore
+	$offset: math.div(math.round($minBreakpointValue * 10000 - (math.div($minBreakpoint, 100) * $slope * 10000)), 10000);
+
+	// 単位を除去して数値のみを取得
+	$slope: strip-unit($slope);
+	$offsetValue: strip-unit($offset);
+
+	// $minBreakpointValue と $maxBreakpointValue を比べて、低い方を $minValue に、高い方を $maxValue に設定
+	$minValue: $minBreakpointValue;
+	$maxValue: $maxBreakpointValue;
+
+	@if $minBreakpointValue > $maxBreakpointValue {
+		$minValue: $maxBreakpointValue;
+		$maxValue: $minBreakpointValue;
+	}
+
+	// clamp() で最小値と最大値の範囲内に収めた計算式を返す
+	@return clamp($minValue, calc(#{$slope}vw + #{$offsetValue}px), $maxValue);
+}
+
+@function fluid-rem(
+	$minBreakpointValue,
+	$maxBreakpointValue,
+	$minBreakpoint: 768,
+	$maxBreakpoint: 1512
+) {
+	// prettier-ignore
+	$slope: math.div(math.round(100 * math.div(($maxBreakpointValue - $minBreakpointValue), ($maxBreakpoint - $minBreakpoint)) * 10000), 10000);
+
+	// prettier-ignore
+	$offset: math.div(math.round($minBreakpointValue * 10000 - (math.div($minBreakpoint, 100) * $slope * 10000)), 10000);
+	$slope: strip-unit($slope);
+	$minValue: $minBreakpointValue;
+	$maxValue: $maxBreakpointValue;
+
+	@if $minBreakpointValue > $maxBreakpointValue {
+		$minValue: $maxBreakpointValue;
+		$maxValue: $minBreakpointValue;
+	}
+
+	// すべて rem 換算で返す
+	$minValue: rem(strip-unit($minValue));
+	$maxValue: rem(strip-unit($maxValue));
+	$offset: rem(strip-unit($offset));
+
+	@return clamp($minValue, calc(#{$slope}vw + #{$offsetValue}px), $maxValue);
+}

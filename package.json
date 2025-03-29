@@ -1,0 +1,19 @@
+{
+  "name": "@spicato-inc/fortenv-style",
+  "version": "0.0.1",
+  "description": "spicato の ベース scss",
+  "author": "spicato inc.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./foundation": "./foundation/_index.scss",
+    "./module": "./module/_index.scss"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com/"
+  }
+}
