@@ -1,10 +1,5 @@
 @use "../module" as *;
 
-// リキッドデザインの場合
-html {
-  font-size: calc(var(--vw) / var(--base-vw));
-}
-
 body {
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
     "Hiragino Sans", Meiryo, sans-serif;
@@ -13,11 +8,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: none;
-
-  // スクロールバーの有無
-  // &::-webkit-scrollbar {
-  // 	display: none;
-  // }
 }
 
 a {

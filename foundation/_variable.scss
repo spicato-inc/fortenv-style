@@ -151,12 +151,6 @@
   --grid-columns: 4;
   --grid-gutter: 20px;
   --grid-margin: 10rem;
-
-  @include z-map(
-    (
-      --z-base: 0,
-    )
-  );
 }
 
 @include pc {
