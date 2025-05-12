@@ -31,26 +31,8 @@
   @return math.div((math.round(($rate * $size * 1vmax) * 100)), 100);
 }
 
-// minを関数対応化
-@function func-min($numbers...) {
-  @return min($numbers...);
-}
-
-@function min($values...) {
-  @return string.unquote("min(#{$values})");
-}
-
-// maxを関数対応化
-@function func-max($numbers...) {
-  @return max($numbers...);
-}
-
-@function max($values...) {
-  @return string.unquote("max(#{$values})");
-}
-
 // pxをremに変換
-@function rem($size) {
+@function to-rem($size) {
   $result: math.div($size, 16);
 
   @return #{$result}rem;
@@ -64,7 +46,7 @@
 }
 
 // rem と vw を組み合わせる
-@function remvw($size, $viewport: $sp-vw) {
+@function rem-vw($size, $viewport: $sp-vw) {
   $rate: math.div(100, $viewport);
   $vw: math.div((math.round(($rate * $size * 1vw) * 100)), 100);
   $rem: math.div($size, 16);
@@ -73,7 +55,7 @@
 }
 
 // clamp生成
-@function clampvw($min, $size, $max, $vp: $sp-vw) {
+@function clamp-vw($min, $size, $max, $vp: $sp-vw) {
   $min: math.div($min, 16) * 1rem;
   $max: math.div($max, 16) * 1rem;
   $rate: math.div(100, $vp);
